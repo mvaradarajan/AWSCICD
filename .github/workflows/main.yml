@@ -40,16 +40,19 @@ jobs:
           aws-region: "us-east-1"
 
       - name: Upload to S3
-        run: |
-          aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/deploy-${{ github.sha }}.zip
+        run: aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/deploy-${{ github.sha }}.zip
 
-      - name: Deploy to Elastic Beanstalk
+      - name: Create new Beanstalk Application Version
         run: |
           aws elasticbeanstalk create-application-version \
-            --application-name MyDotNetApp \
-            --version-label v-${{ github.sha }} \
-            --source-bundle S3Bucket=my-beanstalk-bucket-app-ringinfotech,S3Key=deploy-${{ github.sha }}.zip
+            --application-name my-dotnet-api \
+            --version-label ${{ github.sha }} \
+            --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="deploy-${{ github.sha }}.zip"
 
+      - name: Deploy Application to Beanstalk Environment
+        run: |
           aws elasticbeanstalk update-environment \
-            --environment-name MyDotNetApp-env \
-            --version-label v-${{ github.sha }}
+            --environment-name myapi-env \
+            --version-label ${{ github.sha }}
+
+          
