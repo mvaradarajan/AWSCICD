@@ -2,7 +2,7 @@ name: Deploy .NET API to Elastic Beanstalk (ZIP)
 
 on:
   push:
-    branches: [ "main" ]   # Deploy when pushing to main branch
+    branches: [ "main" ]   # 12312   
   
 jobs:
   deploy:
@@ -24,7 +24,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish Project
-      run: dotnet publish -c Release -o ./publish
+      run: dotnet publish -c Release -o ./publish  
+
 
     - name: Package for Deployment
       run: |
@@ -41,11 +42,15 @@ jobs:
 
     - name: Upload to S3
       run: |
-          aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/${{ github.sha }}.zip
+          aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/${{ github.run_number }}.zip
 
     - name: Create new EB Application Version
       run: |
-          aws elasticbeanstalk create-application-version --application-name AWSCICD --version-label github-${{ github.sha }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.sha }}.zip" --auto-create-application
-         
-
-    
+          aws elasticbeanstalk create-application-version --application-name MyEnv --version-label github-${{ github.run_number }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.run_number }}.zip" 
+    - name: Update EB Environment
+      run: |
+          aws elasticbeanstalk update-environment \
+            --environment-name MyEnv-env \
+            --version-label github-${{ github.run_number }}
+          aws elasticbeanstalk wait environment-updated --application-name MyEnv --environment-name MyEnv-env
+   
