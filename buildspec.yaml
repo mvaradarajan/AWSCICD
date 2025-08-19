@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 8.0   # specify .NET version
+    commands:
+      - echo "Installing dependencies..."
+      - dotnet restore
+
+  build:
+    commands:
+      - echo "Building the project..."
+      - dotnet build --configuration Release
+
+  post_build:
+    commands:
+      - echo "Running tests..."
+      - dotnet test --configuration Release --no-build
+      - echo "Publishing build artifacts..."
+      - dotnet publish -c Release -o ./publish
+
+artifacts:
+  files:
+    - publish/**/*
+    - appsettings.json
+  discard-paths: no
+  base-directory: publish
