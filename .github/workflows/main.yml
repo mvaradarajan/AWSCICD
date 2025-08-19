@@ -2,7 +2,7 @@ name: Deploy .NET API to Elastic Beanstalk (ZIP)
 
 on:
   push:
-    branches: [ "main" ]   # Deploy when pushing 
+    branches: [ "main" ]   # Deploy when  
   
 jobs:
   deploy:
