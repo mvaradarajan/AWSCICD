@@ -1,4 +1,4 @@
-github-${{ github.sha }}name: Deploy .NET API to Elastic Beanstalk (ZIP)
+name: Deploy .NET API to Elastic Beanstalk (ZIP)
 
 on:
   push:
