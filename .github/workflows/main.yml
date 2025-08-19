@@ -50,7 +50,7 @@ jobs:
     - name: Update EB Environment
       run: |
           aws elasticbeanstalk update-environment \
-            --environment-name MyEnv \
+            --environment-name MyEnv-env \
             --version-label v${{ github.run_number }}
 
     
