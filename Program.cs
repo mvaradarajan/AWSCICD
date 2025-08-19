@@ -8,7 +8,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    var port =  "5000";
     serverOptions.ListenAnyIP(int.Parse(port));
 });
 
