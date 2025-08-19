@@ -19,7 +19,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapGet("/", () => "Hello World from .NET 8 on Beanstalk!");
 var summaries = new[]
 {
