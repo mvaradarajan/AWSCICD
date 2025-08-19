@@ -32,6 +32,13 @@ jobs:
         zip -r ../deploy.zip .
         cd ..
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: "AKIA3B4QLJXL5SMLPKJ7"
+        aws-secret-access-key: "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"
+        aws-region: "us-east-1"
+
     - name: Upload to S3
       run: |
           aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/AWSCICD/${{ github.sha }}.zip
