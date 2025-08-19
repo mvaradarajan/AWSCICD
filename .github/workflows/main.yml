@@ -47,6 +47,10 @@ jobs:
     - name: Create new EB Application Version
       run: |
           aws elasticbeanstalk create-application-version --application-name MyEnv --version-label github-${{ github.sha }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.sha }}.zip" 
-         
+    - name: Update EB Environment
+      run: |
+          aws elasticbeanstalk update-environment \
+            --environment-name MyEnv-env \
+            --version-label v${{ github.run_number }}
 
     
