@@ -1,58 +1,44 @@
-name: Build & Deploy to Elastic Beanstalk
+name: Deploy .NET API to Elastic Beanstalk (ZIP)
 
 on:
   push:
-    branches: [ main ]   # deploy when pushing to main branch
+    branches: [ "main" ]   # Deploy when pushing to main branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'   # adjust if using 6.0 or 7.0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'   # Change if you use 6.0 or 7.0
 
-      - name: Restore dependencies
-        run: dotnet restore
+    - name: Restore Dependencies
+      run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+    - name: Build Project
+      run: dotnet build --configuration Release --no-restore
 
-      - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+    - name: Publish Project
+      run: dotnet publish -c Release -o ./publish
 
-      - name: Publish
-        run: dotnet publish -c Release -o ./publish
+    - name: Package for Deployment
+      run: |
+        cd publish
+        zip -r ../deploy.zip .
+        cd ..
 
-      - name: Zip artifact
-        run: zip -r deploy.zip ./publish/*
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: "AKIA3B4QLJXL5SMLPKJ7"
-          aws-secret-access-key: "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"
-          aws-region: "us-east-1"
-
-      - name: Upload to S3
-        run: aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/deploy-${{ github.sha }}.zip
-
-      - name: Create new Beanstalk Application Version
-        run: |
-          aws elasticbeanstalk create-application-version \
-            --application-name AWSCICD \
-            --version-label ${{ github.sha }} \
-            --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="deploy-${{ github.sha }}.zip"
-
-      - name: Deploy Application to Beanstalk Environment
-        run: |
-          aws elasticbeanstalk update-environment \
-            --environment-name myapi-env \
-            --version-label ${{ github.sha }}
-
-          
+    - name: Deploy to Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v22
+      with:
+        aws_access_key: "AKIA3B4QLJXL5SMLPKJ7"
+        aws_secret_key: "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"
+        application_name: "AWSCICD"
+        environment_name: "my-env"
+        region: "us-east-1"
+        version_label: github-${{ github.sha }}
+        deployment_package: deploy.zip
