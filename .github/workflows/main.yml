@@ -42,4 +42,4 @@ jobs:
         region: "us-east-1"
         version_label: github-${{ github.sha }}
         deployment_package: deploy.zip
-        existing_bucket_name: "my-beanstalk-bucket-app-ringinfotech" 
+        existing_bucket_name: my-beanstalk-bucket-app-ringinfotech
