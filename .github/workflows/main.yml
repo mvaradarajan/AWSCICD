@@ -52,5 +52,5 @@ jobs:
           aws elasticbeanstalk update-environment \
             --environment-name MyEnv-env \
             --version-label github-${{ github.run_number }}
-
-    
+          aws elasticbeanstalk wait environment-updated --application-name MyEnv --environment-name MyEnv-env
+   
