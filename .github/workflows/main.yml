@@ -42,15 +42,15 @@ jobs:
 
     - name: Upload to S3
       run: |
-          aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/${{ github.GITHUB_RUN_NUMBER }}.zip
+          aws s3 cp deploy.zip s3://my-beanstalk-bucket-app-ringinfotech/${{ github.run_number }}.zip
 
     - name: Create new EB Application Version
       run: |
-          aws elasticbeanstalk create-application-version --application-name MyEnv --version-label github-${{ github.GITHUB_RUN_NUMBER }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.GITHUB_RUN_NUMBER }}.zip" 
+          aws elasticbeanstalk create-application-version --application-name MyEnv --version-label github-${{ github.run_number }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.run_number }}.zip" 
     - name: Update EB Environment
       run: |
           aws elasticbeanstalk update-environment \
             --environment-name MyEnv-env \
-            --version-label github-${{ github.GITHUB_RUN_NUMBER }}
+            --version-label github-${{ github.run_number }}
 
     
