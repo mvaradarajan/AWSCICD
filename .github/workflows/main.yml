@@ -24,7 +24,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish Project
-      run: dotnet publish -c Release -o ./publish
+      run: dotnet publish -c Release -o ./publish  AWSCICD.dll AWSCICD.deps.json   AWSCICD.runtimeconfig.json
+
 
     - name: Package for Deployment
       run: |
