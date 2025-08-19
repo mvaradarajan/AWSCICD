@@ -24,7 +24,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish Project
-      run: dotnet publish -c Release -o ./publish  AWSCICD.dll AWSCICD.deps.json   AWSCICD.runtimeconfig.json
+      run: dotnet publish -c Release -o ./publish  
 
 
     - name: Package for Deployment
@@ -46,7 +46,7 @@ jobs:
 
     - name: Create new EB Application Version
       run: |
-          aws elasticbeanstalk create-application-version --application-name AWSCICD --version-label github-${{ github.sha }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.sha }}.zip" --auto-create-application
+          aws elasticbeanstalk create-application-version --application-name MyEnv --version-label github-${{ github.sha }} --description MyAppv1 --source-bundle S3Bucket="my-beanstalk-bucket-app-ringinfotech",S3Key="${{ github.sha }}.zip" 
          
 
     
